@@ -1,0 +1,15 @@
+{
+  "javascript.validate.enable": true,
+  "typescript.validate.enable": false,
+  "javascript.suggestionActions.enabled": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": false,
+  "files.associations": {
+    "*.jsx": "javascriptreact",
+    "*.js": "javascript"
+  },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact"
+  ]
+}

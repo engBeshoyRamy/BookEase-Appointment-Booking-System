@@ -1,7 +1,7 @@
 module.exports = {
   content: [
-    "./src/**/*.{js,jsx}",
-    "./public/index.html"
+    "./src/**/*.{js,jsx,ts,tsx,html}",
+    "./public/index.html",
   ],
   darkMode: 'class', // تفعيل Dark Mode
   theme: {

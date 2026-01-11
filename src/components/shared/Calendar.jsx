@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { getMonthDays, formatDate, isPastDate, isSameDay } from '../../utils/dateUtils';
+import { getMonthDays, isPastDate, isSameDay } from '../../utils/dateUtils';
 
 export const Calendar = ({ 
   selectedDate, 

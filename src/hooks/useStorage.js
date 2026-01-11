@@ -1,65 +1,66 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-/**
- * Custom hook for persistent storage using window.storage API
- * @param {string} key - Storage key
- * @param {*} initialValue - Initial value if no stored value exists
- * @returns {Array} [value, setValue, loading]
- */
 export const useStorage = (key, initialValue) => {
-  const [value, setValue] = useState(initialValue);
-  const [loading, setLoading] = useState(true);
-
-  // Load data from storage on mount
-  useEffect(() => {
-    let mounted = true;
-
-    const loadData = async () => {
-      try {
-        const result = await window.storage.get(key);
-        
-        if (mounted) {
-          if (result?.value) {
-            setValue(JSON.parse(result.value));
-          } else if (initialValue !== null && initialValue !== undefined) {
-            // Initialize storage with initial value
-            await window.storage.set(key, JSON.stringify(initialValue));
-          }
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error(`Error loading storage key "${key}":`, error);
-        if (mounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    loadData();
-
-    return () => {
-      mounted = false;
-    };
-  }, [key, initialValue]);
-
-  // Function to update both state and storage
-  const updateValue = async (newValue) => {
+  // ✅ استخدم useRef عشان نحفظ initialValue بدون ما يتغير
+  const initialValueRef = useRef(initialValue);
+  
+  const [data, setData] = useState(() => {
     try {
-      // Support functional updates like setState
-      const valueToStore = typeof newValue === 'function' 
-        ? newValue(value) 
-        : newValue;
+      const stored = localStorage.getItem(key);
+      return stored ? JSON.parse(stored) : initialValueRef.current;
+    } catch {
+      return initialValueRef.current;
+    }
+  });
 
-      setValue(valueToStore);
-      await window.storage.set(key, JSON.stringify(valueToStore));
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(key);
+      if (stored === null) {
+        localStorage.setItem(key, JSON.stringify(initialValueRef.current));
+        setData(initialValueRef.current);
+      }
+    } catch (err) {
+      console.error(err);
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [key]); // ✅ دلوقتي مفيش warning
+
+  const updateData = (newValue) => {
+    try {
+      const valueToStore = typeof newValue === 'function' ? newValue(data) : newValue;
+      setData(valueToStore);
+      localStorage.setItem(key, JSON.stringify(valueToStore));
       return true;
-    } catch (error) {
-      console.error(`Error saving storage key "${key}":`, error);
+    } catch (err) {
+      console.error(err);
+      setError(err);
       return false;
     }
   };
 
-  return [value, updateValue, loading];
+  const reload = () => {
+    try {
+      const stored = localStorage.getItem(key);
+      setData(stored ? JSON.parse(stored) : initialValueRef.current);
+    } catch (err) {
+      console.error(err);
+      setError(err);
+    }
+  };
+
+  return {
+    data,
+    setData: updateData,
+    loading,
+    error,
+    reload,
+  };
 };
 
 export default useStorage;

@@ -4,16 +4,16 @@ export const validateEmail = (email) => {
 };
 
 export const validatePhone = (phone) => {
-  const phoneRegex = /^[\d\s\-\+\(\)]{10,}$/;
+  const phoneRegex = /^[+]?[(]?\d{3}[)]?[\s.-]?\d{3}[\s.-]?\d{4}$/;
   return phoneRegex.test(phone);
 };
 
-export const validateRequired = (value) => {
-  return value.trim().length > 0;
+export const validateName = (name) => {
+  return name && name.trim().length >= 2;
 };
 
-export const validateName = (name) => {
-  return name.trim().length >= 2;
+export const validateRequired = (value) => {
+  return value && value.trim().length > 0;
 };
 
 export const validateBookingForm = (data) => {

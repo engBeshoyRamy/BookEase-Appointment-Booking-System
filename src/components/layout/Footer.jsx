@@ -1,80 +1,98 @@
 import React from 'react';
-import { Calendar, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Mail } from 'lucide-react';
 
-export const Footer = () => {
+const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-gray-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="bg-gray-900 text-white py-12">
+      <div className="container mx-auto px-4">
+        <div className="grid md:grid-cols-4 gap-8">
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Calendar className="w-6 h-6 text-blue-500" />
-              <h3 className="text-lg font-bold text-white">BookEase</h3>
-            </div>
-            <p className="text-sm text-gray-400">
-              Your trusted appointment booking platform for professional services.
-            </p>
+            <h3 className="text-xl font-bold mb-4">BookEase</h3>
+            <p className="text-gray-400">Your professional appointment booking solution</p>
           </div>
-
+          
           <div>
-            <h4 className="text-white font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="font-semibold mb-4">Quick Links</h4>
+            <ul className="space-y-2">
               <li>
-                <a href="#" className="hover:text-blue-500 transition-colors">
+                <button className="text-gray-400 hover:text-white transition-colors">
                   About Us
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" className="hover:text-blue-500 transition-colors">
+                <button className="text-gray-400 hover:text-white transition-colors">
                   Services
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#" className="hover:text-blue-500 transition-colors">
-                  FAQ
-                </a>
+                <button className="text-gray-400 hover:text-white transition-colors">
+                  Contact
+                </button>
               </li>
               <li>
-                <a href="#" className="hover:text-blue-500 transition-colors">
+                <button className="text-gray-400 hover:text-white transition-colors">
                   Privacy Policy
-                </a>
+                </button>
               </li>
             </ul>
           </div>
-
+          
           <div>
-            <h4 className="text-white font-semibold mb-4">Business Hours</h4>
-            <ul className="space-y-2 text-sm">
-              <li>Monday - Wednesday: 9:00 AM - 6:00 PM</li>
-              <li>Thursday - Friday: 9:00 AM - 8:00 PM</li>
-              <li>Saturday: 10:00 AM - 4:00 PM</li>
-              <li>Sunday: Closed</li>
+            <h4 className="font-semibold mb-4">Contact</h4>
+            <ul className="space-y-2 text-gray-400">
+              <li>Email: info@bookease.com</li>
+              <li>Phone: +1 (555) 123-4567</li>
+              <li>Address: 123 Business St.</li>
             </ul>
           </div>
-
+          
           <div>
-            <h4 className="text-white font-semibold mb-4">Contact Us</h4>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-blue-500" />
-                (555) 123-4567
-              </li>
-              <li className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-blue-500" />
-                info@bookease.com
-              </li>
-              <li className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-blue-500" />
-                123 Main Street, City, State
-              </li>
-            </ul>
+            <h4 className="font-semibold mb-4">Follow Us</h4>
+            <div className="flex gap-4">
+              <a 
+                href="https://facebook.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <Facebook size={24} />
+              </a>
+              <a 
+                href="https://twitter.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="Twitter"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <Twitter size={24} />
+              </a>
+              <a 
+                href="https://instagram.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <Instagram size={24} />
+              </a>
+              <a 
+                href="mailto:info@bookease.com"
+                aria-label="Email"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <Mail size={24} />
+              </a>
+            </div>
           </div>
         </div>
-
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Eng. Beshoy Ramy - BookEase. All rights reserved.</p>
+        
+        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+          <p>&copy; {new Date().getFullYear()} Eng.Beshoy Ramy - BookEase. All rights reserved.</p>
         </div>
       </div>
     </footer>
   );
 };
+
+export default Footer;

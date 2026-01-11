@@ -8,7 +8,7 @@ import { formatDisplayDate, formatTime } from '../../utils/dateUtils';
 
 export const AdminDashboard = ({ onNavigateToAppointments, onNavigateToServices }) => {
   const { appointments, loading: appointmentsLoading } = useAppointments();
-  const { services, getServiceById } = useServices();
+  const {  getServiceById } = useServices();
 
   const statistics = useMemo(() => {
     const totalBookings = appointments.length;

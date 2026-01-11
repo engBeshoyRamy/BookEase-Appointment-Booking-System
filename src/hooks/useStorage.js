@@ -1,71 +1,65 @@
-import { useState, useEffect, useCallback } from 'react';
-import { storageService } from '../utils/storage';
+import { useState, useEffect } from 'react';
 
-export function useStorage(key, initialValue) {
-  const [data, setData] = useState(initialValue);
+/**
+ * Custom hook for persistent storage using window.storage API
+ * @param {string} key - Storage key
+ * @param {*} initialValue - Initial value if no stored value exists
+ * @returns {Array} [value, setValue, loading]
+ */
+export const useStorage = (key, initialValue) => {
+  const [value, setValue] = useState(initialValue);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [isInitialized, setIsInitialized] = useState(false);
 
-  const loadData = useCallback(async () => {
-    if (isInitialized) return; // منع التحميل المتكرر
-    
-    try {
-      setLoading(true);
-      const storedData = await storageService.get(key);
-      if (storedData !== null) {
-        setData(storedData);
-      } else {
-        setData(initialValue);
-        // حفظ البيانات الأولية إذا لم تكن موجودة
-        await storageService.set(key, initialValue);
-      }
-      setError(null);
-      setIsInitialized(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load data');
-      setData(initialValue);
-      setIsInitialized(true);
-    } finally {
-      setLoading(false);
-    }
-  }, [key]); // أزلنا initialValue من dependencies
-
+  // Load data from storage on mount
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    let mounted = true;
 
-  const saveData = useCallback(async (newData) => {
-    try {
-      const success = await storageService.set(key, newData);
-      if (success) {
-        setData(newData);
-        setError(null);
-        return true;
-      } else {
-        setError('Failed to save data');
-        return false;
+    const loadData = async () => {
+      try {
+        const result = await window.storage.get(key);
+        
+        if (mounted) {
+          if (result?.value) {
+            setValue(JSON.parse(result.value));
+          } else if (initialValue !== null && initialValue !== undefined) {
+            // Initialize storage with initial value
+            await window.storage.set(key, JSON.stringify(initialValue));
+          }
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error(`Error loading storage key "${key}":`, error);
+        if (mounted) {
+          setLoading(false);
+        }
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save data');
+    };
+
+    loadData();
+
+    return () => {
+      mounted = false;
+    };
+  }, [key, initialValue]);
+
+  // Function to update both state and storage
+  const updateValue = async (newValue) => {
+    try {
+      // Support functional updates like setState
+      const valueToStore = typeof newValue === 'function' 
+        ? newValue(value) 
+        : newValue;
+
+      setValue(valueToStore);
+      await window.storage.set(key, JSON.stringify(valueToStore));
+      return true;
+    } catch (error) {
+      console.error(`Error saving storage key "${key}":`, error);
       return false;
     }
-  }, [key]);
-
-  const updateData = useCallback((updater) => {
-    setData(current => {
-      const newData = updater(current);
-      saveData(newData);
-      return newData;
-    });
-  }, [saveData]);
-
-  return {
-    data,
-    setData: saveData,
-    updateData,
-    loading,
-    error,
-    reload: loadData,
   };
-}
+
+  return [value, updateValue, loading];
+};
+
+export default useStorage;
